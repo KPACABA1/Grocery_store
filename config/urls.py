@@ -8,6 +8,6 @@ urlpatterns = [
     # Урлы приложения products
     path('product/', include('products.urls', namespace='product')),
 
-    # # Урлы приложения staff
-    # path('staff/', include('staff.urls', namespace='staff')),
+    # Урлы приложения users
+    path('user/', include('users.urls', namespace='user')),
 ]

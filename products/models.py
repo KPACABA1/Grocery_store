@@ -39,6 +39,8 @@ class Product(models.Model):
     picture = models.ImageField(upload_to='products_picture/', blank=True, null=True,
                                 verbose_name='Изображение')
     price = models.PositiveIntegerField(verbose_name='Цена')
+    subcategory = models.ForeignKey(Subcategory, on_delete=models.CASCADE, verbose_name='Подкатегория',
+                                 related_name='product_subcategory', null=True, blank=True)
 
     class Meta:
         verbose_name = 'Продукт'
