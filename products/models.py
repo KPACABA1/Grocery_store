@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class Category(models.Model):
     """Модель категории."""
     name = models.CharField(max_length=50, verbose_name='Название', unique=True)
