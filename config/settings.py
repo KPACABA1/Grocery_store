@@ -110,11 +110,14 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # Настройки для работы с пользователями
 AUTH_USER_MODEL = 'users.User'
 
-# Настройка для авторизации
+# Настройка для авторизации и по умолчанию все эндпоинты доступны любому пользователю
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
+    ),
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny',
+    ]
 }
 
 # Настройка для времени жизни ACCESS и REFRESH токенов

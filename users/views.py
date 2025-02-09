@@ -2,10 +2,12 @@ from django.db import transaction
 from django.db.models import F
 from rest_framework import status, serializers
 from rest_framework.generics import CreateAPIView, DestroyAPIView, RetrieveAPIView
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from products.models import Product
 from users.models import User, Basket, BasketItem
+from users.permissions import BasketOwner
 from users.serializers import UserSerializer, BasketSerializer
 
 
@@ -22,8 +24,9 @@ class UserCreateApiView(CreateAPIView):
 
 
 class AppendToBasketView(CreateAPIView):
-    """Класс для добавления продукта в корзину."""
+    """Класс для добавления продукта в корзину с доступом только авторизованному пользователю."""
     serializer_class = BasketSerializer
+    permission_classes = (IsAuthenticated,)
 
     # Обеспечиваем атомарность операции
     @transaction.atomic
@@ -50,8 +53,9 @@ class AppendToBasketView(CreateAPIView):
 
 
 class DeleteFromBasketView(DestroyAPIView):
-    """Класс для удаления товара из корзины."""
+    """Класс для удаления товара из корзины с доступом только авторизованному пользователю."""
     serializer_class = BasketSerializer
+    permission_classes = (IsAuthenticated,)
 
     # Обеспечиваем атомарность операции
     @transaction.atomic
@@ -81,8 +85,9 @@ class DeleteFromBasketView(DestroyAPIView):
 
 
 class BasketRetrieveView(RetrieveAPIView):
-    """Класс показывает корзину текущего пользователя"""
+    """Класс показывает корзину текущего пользователя с доступом только авторизованному пользователю"""
     serializer_class = BasketSerializer
+    permission_classes = (IsAuthenticated,)
 
     def get_object(self):
         """Метод показывает корзину текущего пользователя."""
@@ -91,6 +96,7 @@ class BasketRetrieveView(RetrieveAPIView):
 
 
 class BasketDestroyAPIView(DestroyAPIView):
-    """Класс для полной очистки корзины"""
+    """Класс для полной очистки корзины(может удалить свою корзину только её владелец)"""
     queryset = Basket.objects.all()
     serializer_class = BasketSerializer
+    permission_classes = (BasketOwner, IsAuthenticated)
